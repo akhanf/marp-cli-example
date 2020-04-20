@@ -1,77 +1,76 @@
 ---
 marp: true
-title: Marp CLI example
-description: Hosting Marp slide deck on the web
-theme: uncover
+theme: gaia
+_class: lead
 paginate: true
-_paginate: false
+backgroundColor: #fff
+backgroundImage: url('https://marp.app/assets/hero-background.jpg')
 ---
 
-![bg](./assets/gradient.jpg)
+# Why?
 
-# <!--fit--> Marp CLI example
+* Python >> shell scripts, Matlab
+* Your workflow will be reusable by others and your future self
 
-Hosting Marp slide deck on the web
+--- 
+# Typical process without a workflow manager
 
-https://github.com/yhatt/marp-cli-example
+--- 
+# Snakemake at-a-glance
 
-<style scoped>a { color: #eee; }</style>
+* inspired by Makefiles 
+    * if you don't know how Make works, don't worry about it..
+* 
 
-<!-- This is presenter note. You can write down notes through HTML comment. -->
+--- 
+# Snakemake vs Nipype
 
----
-
-![Marp bg 60%](https://raw.githubusercontent.com/marp-team/marp/master/marp.png)
-
----
-
-![bg](#123)
-![](#fff)
-
-##### <!--fit--> [Marp CLI](https://github.com/marp-team/marp-cli) + [GitHub Pages](https://github.com/pages) | [Netlify](https://www.netlify.com/) | [ZEIT Now](https://zeit.co/now)
-
-##### <!--fit--> 👉 The easiest way to host<br />your Marp deck on the web
+Both are workflow management environments.
 
 ---
-
-![bg right 70%](https://icongr.am/octicons/mark-github.svg)
-
-## **[GitHub Pages](https://github.com/pages)**
-
-#### Ready to write & host your deck!
-
-[![Fork on GitHub h:1.5em](https://img.shields.io/github/forks/yhatt/marp-cli-example?label=Fork&style=social)](https://github.com/yhatt/marp-cli-example)
-
-<!-- _footer: ":information_source: Require to pass ACCESS_TOKEN as secret." -->
-
+## Nipype pros:
+* was developed for neuroimaging, so many wrappers and helper scripts specifically for tools like FSL, SPM, etc.. 
+* workflows can understand files 
 ---
+## Nipype cons:
+* To use a tool, you must *wrap* it
+    * i.e. write some code to indicate what the input/output parameters, files are 
+* Complicated means for parallel execution & file i/o
+    * MapNodes, Identity iterables, DataSinks
+* Does not support workflows with heterogeneous dependencies
+    * Everything must be in a single environment
+* Code/workflow is not very readable
+    * Many layers of abstraction to get to the actual code of interest
+* Has been challenging to adopt universally
+    
+--- 
 
-![bg right 70%](https://www.netlify.com/img/press/logos/logomark.svg)
+--- 
+# How to get started
 
-## **[Netlify](https://www.netlify.com/)**
 
-#### Ready to write & host your deck!
+## Quick-start on graham:
+* Install latest neuroglia-helpers
+  * make sure to use the khanlab cfg
+* This includes shortcuts to a virtualenv that has snakemake installed, as well as wrappers for cluster execution
+* Note: if you want to customize your python environment, you can also follow the instructions on the snakemake docs to install miniconda and snakemake
 
-[![Deploy to Netlify h:1.5em](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yhatt/marp-cli-example)
 
----
+--- 
+# Cool features
 
-![bg right 70%](https://assets.zeit.co/image/upload/front/assets/design/now-black.svg)
+## Easily combine shell and python
+Can use the `shell()` command inside any Python `run:` blocks, even inside Python loops
 
-## **[ZEIT Now](https://zeit.co/now)**
+## Don't have to worry about creating folders or checking if files exist
 
-#### Ready to write & host your deck!
+## Visualization of the workflow is simple (similar to nipype)
 
-[![Deploy with ZEIT Now h:1.5em](https://zeit.co/button)](https://zeit.co/new/project?template=https://github.com/yhatt/marp-cli-example)
 
----
+--- 
+# Rules
 
-### <!--fit--> :ok_hand:
+Each rule should be a step in your workflow that generates some file(s)
 
----
+Can be some inline shell or python code (`shell:` or `run:` directives), or external Python (or R) scripts
 
-![bg 40% opacity blur](https://avatars1.githubusercontent.com/u/3993388?v=4)
-
-### Created by Yuki Hattori ([@yhatt](https://github.com/yhatt))
-
-https://github.com/yhatt/marp-cli-example
