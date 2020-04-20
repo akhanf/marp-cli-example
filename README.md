@@ -1,3 +1,5 @@
+# This README describes the Marp (markdown-based slide presentation site) workflow, see repo forked for more details.. 
+
 # Marp CLI example
 
 **The good starter example for using [Marp] via [Marp CLI].**
