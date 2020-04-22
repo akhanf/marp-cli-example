@@ -1,7 +1,6 @@
 ---
 marp: true
-#theme: gaia
-_class: lead
+theme: gaia
 paginate: true
 backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.jpg')
@@ -9,6 +8,10 @@ headingDivider: 1
 ---
 Snakemake for Neuroimaging
 ===
+
+# Snakemake Intro Slides
+
+<https://slides.com/johanneskoester/ismb-snakemake-tutorial-2019#/>
 
 # Typical workflow for neuroimaging researcher
 
@@ -58,8 +61,8 @@ Each rule should be a step in your workflow that generates some file(s)
 Can be some inline shell or python code (`shell:` or `run:` directives), or external Python (or R) scripts
 
 # Wildcards
-* Provides a way to generalize a rule
-* Wildcards are automatically resolved by (regular expression) patterns in the **output** filenames
+- Provides a way to generalize a rule
+- Wildcards are automatically resolved by (regular expression) patterns in the **output** filenames
 
 ```
 rule complex_conversion:
@@ -73,8 +76,8 @@ rule complex_conversion:
 
 # Aggregation with expand()
 
-* Input/output files can also be **lists**
-* e.g. in Python, we can create a list as:
+- Input/output files can also be **lists**
+- e.g. in Python, we can create a list as:
 ```
 rule aggregate:
     input:
@@ -86,8 +89,8 @@ rule aggregate:
 ```
 
 # Functions as input files
-* For more flexibility, you can also have your input files defined by a function
-* This function **must** take a `wildcards` argument, which contains the wildcards resolved by the output files
+- For more flexibility, you can also have your input files defined by a function
+- This function **must** take a `wildcards` argument, which contains the wildcards resolved by the output files
 ```
 def myfunc(wildcards):
     return [... a list of input files depending on given wildcards ...]
@@ -99,7 +102,7 @@ rule:
 ```
 # Log files
 
-* Log files can be defined with `log:` but you have to make sure your code actually writes to them!
+- Log files can be defined with `log:` but you have to make sure your code actually writes to them!
 ```
 rule abc:
     input: "input.txt"
@@ -110,15 +113,15 @@ rule abc:
 
 
 # Configuration files
-* Written in YAML/JSON
-* Defines a dictionary of config parameters
+- Written in YAML/JSON
+- Defines a dictionary of config parameters
 ```
 bids_dir: /path/to/bids_dir
 seeds:
  - ZI
  - STN
 ```
-* Variables can also be overriden at command-line
+- Variables can also be overriden at command-line
 ```
 $ snakemake --config yourparam=1.5
 ```
@@ -131,15 +134,21 @@ Can use the `shell()` command inside any Python `run:` blocks, even inside Pytho
 for line in shell("somecommand {output.somename}", iterable=True):
     ... # do something in python
 ```    
-# Only generates nRe-creates te sub-folders or check if filess already exist
-* Snakemake checks file existence and modication times to determine if a rule should be run
-* Automatically creates needed folders too
-* Note: 
+# Runs rules only as needed
+* Snakemake checks file existence and modication times to determine if a rule should be run (*)
+* Automatically creates needed sub-folders
+* If a job fails (e.g. exit non-zero), any output files are removed
+</br>
+* (*) Note: If a file exists, but it corrupted, snakemake will not know the difference. Would need to force re-run, or delete the file first.. 
 
 # Visualization of the workflow is simple (similar to nipype)
+
+- The graph can be output in a programmatic format amenable to visualization 
+- The `graphviz` package has a tool, `dot`, to render these graphs
 ```
 $ snakemake --rulegraph | dot -Tpng > rulegraph.png
 ```
+- There are `--dag` and `--filegraph` options, but can be huge if many files
 
 # Generated Rule graph 
 ![height:500px](https://github.com/akhanf/zona-diffparc/raw/master/doc/rulegraph.png)
@@ -152,30 +161,36 @@ $ snakemake --report
 [example report](report.html)
 
 
+# Best practices for reproducibility
+- Keep your workflow in a git repository
+- Built-in `--lint` can let you know if you are following current best practices
+- Can use cookiecutter to generate a skeleton repo from a template:
+```
+cookiecutter gh:snakemake-workflows/cookiecutter-snakemake-workflow
+```
 # Archive a workflow
 
 * Stores everything you need to produce the outputs (including input files, code, config files etc) in a single `tar.gz`
+```
+$ snakemake --archive my-workflow.tar.gz
+```
+* Then, someone can **easily** reproduce same analysis on the same data by running:
+```
+tar -xf my-workflow.tar.gz
+snakemake -n
+```
 
-# Modularization
-* Wrappers repository
-* Multiple snakefiles with `include:`
-* Sub-workflows
-
-<https://snakemake.readthedocs.io/en/stable/snakefiles/modularization.html#>
-
-
-# Other stuff:
-* Remote locations (e.g. http, dropbox, s3)
-* Cookie-cutter workflow 
 
 
 # Running workflows on graham
 
+* Some recommendations on how to easily get started on graham
+
 
 # Getting started on graham:
-* Pick your favorite text editor (vi/emacs/nano etc)
-* Install latest neuroglia-helpers
-    * make sure to use the khanlab cfg
+- Pick your favorite text editor (vi/emacs/nano etc)
+- Install latest neuroglia-helpers
+    - make sure to use the khanlab cfg
 ```
 ssh graham.computecanada.ca
 git clone https://github.com/khanlab/neuroglia-helpers
@@ -226,14 +241,27 @@ snakemake -j 8 --resources mem=4000
 
 # Pitfalls
  
-* Building large DAGs
+* Stuck when Building DAG
     * Many files and inputs can make building the DAG take a looong time.. 
     * Intrinsic weakness of Snakemake
     * You can help alleviate this somewhat by using the `batch` option
+* Input functions can be tricky 
 
----
+# Start snakemaking!
+* Your future self will thank you!
+* Join #snakemake on slack!
+* Post your questions/issues there, along with any Python questions!
+* Happy to help walk through creating your first snakefile
 
-# Appendix A - Snakemake vs Nipype
+
+# Appendix A - Resources
+
+Snakemake Documentation:
+https://snakemake.readthedocs.io/en/stable/index.html
+
+Neuroglia-helpers for Khanlab Snakemake environment: https://github.com/khanlab/neuroglia-helpers
+
+# Appendix B - Snakemake vs Nipype
 
 * Both are workflow management environments, built with Python
 
@@ -256,9 +284,3 @@ snakemake -j 8 --resources mem=4000
     
 
 
-# Appendix B - Resources
-
-Snakemake Documentation:
-https://snakemake.readthedocs.io/en/stable/index.html
-
-Neuroglia-helpers for Khanlab Snakemake environment: https://github.com/khanlab/neuroglia-helpers
