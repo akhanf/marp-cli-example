@@ -170,11 +170,11 @@ cookiecutter gh:snakemake-workflows/cookiecutter-snakemake-workflow
 ```
 # Archive a workflow
 
-* Stores everything you need to produce the outputs (including input files, code, config files etc) in a single `tar.gz`
+- Stores everything you need to produce the outputs (including input files, code, config files etc) in a single `tar.gz`
 ```
 $ snakemake --archive my-workflow.tar.gz
 ```
-* Then, someone can **easily** reproduce same analysis on the same data by running:
+- Then, someone can **easily** reproduce same analysis on the same data by running:
 ```
 tar -xf my-workflow.tar.gz
 snakemake -n
@@ -233,11 +233,21 @@ rule myjob:
 
 # Interactive jobs:
 
-* Interactive jobs are typically 8-core, 32gb memory, for 3 hours
-* You should make sure you set the resources available to snakemake when you run it:
+- Interactive jobs are typically 8-core, 32gb memory, for 3 hours
+- You should make sure you set the resources available to snakemake when you run it:
 ```
 snakemake -j 8 --resources mem=4000 
 ```
+
+# Interactive Jupyter notebook:
+- Neuroglia-helpers also has a shortcut to start a jupyter notebook session on graham that you can connect to from your own 
+browser
+
+From your working folder on graham, run:
+```
+jupyter_snakemake
+```
+Then on your local computer use `sshuttle` so you can connect to the remote host via your browser.
 
 # Pitfalls
  
