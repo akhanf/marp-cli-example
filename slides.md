@@ -154,12 +154,10 @@ $ snakemake --rulegraph | dot -Tpng > rulegraph.png
 ![height:500px](https://github.com/akhanf/zona-diffparc/raw/master/doc/rulegraph.png)
 
 # Automated generation of interactive HTML reports
-* You can easily create a report showing the workflow you ran:
+- You can easily create a report showing the workflow you ran:
 ```
 $ snakemake --report
 ```
-[example report](report.html)
-
 
 # Best practices for reproducibility
 - Keep your workflow in a git repository
