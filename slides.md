@@ -187,27 +187,61 @@ snakemake -n
 
 # Getting started on graham:
 - Pick your favorite text editor (vi/emacs/nano etc)
-- Install latest neuroglia-helpers
-    - make sure to use the khanlab cfg
+- Microsoft VSCode with: Python, Remote, Snakemake extensions
+- PyCharm with Snakecharm extension
+
+# Installing Snakemake
+- Snakemake documentation recommends conda
+- Compute Canada advises **against** conda (especially anaconda) 
+    - But you **can** still install miniconda in your home directory
+- Can alternatively install snakemake in a virtualenv, but would not be able to use `conda` feature in snakemake
+
+# Installing Snakemake: Option 1
+* Install miniconda in home directory:
+    ```
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    ./Miniconda3-latest-Linux-x86_64.sh
+    conda init
+    ...
+    conda install -c conda-forge -c bioconda snakemake
+    ```
+  - this is the most flexible, but can use up a big chunk of your #Files quota in home directory
+# Installing Snakemake: Option 2
+* Install snakemake in your own virtualenv
+    ```
+    module load python/3
+    virtualenv venv_smk
+    source venv_smk/bin/activate
+    pip install snakemake ...
+    ```
+ * this is fine, but won't allow you to use the `conda` directive
+
+# Installing Snakemake: Option 3
+*  Use provided wrapper in neuroglia-helpers that uses my pre-built virtualenv with snakemake and other common packages installed
 ```
 ssh graham.computecanada.ca
 git clone https://github.com/khanlab/neuroglia-helpers
 ~/neuroglia-helpers/setup.sh khanlab
+...
+snakemake
 ```
-
-# Snakemake & Neuroglia-helpers
-* Includes shortcuts to a virtualenv that has snakemake installed, as well as wrappers for cluster execution
-* Note: if you want to customize your python environment, you can also follow the instructions on the snakemake docs to install miniconda and snakemake
+  * Quick way to get started 
+    * But: if you need additional python packages installed, can't do it yourself..
+ 
 
 # Different options to run snakemake:
 
 1) Use an interactive job to run `snakemake` (e.g. `regularInteractive`)
 2) Submit a job that runs `snakemake` (e.g. `regularSubmit`)
-3) Use the `snakemake_slurm` wrapper
+3) Use the `cc-slurm` profile
     * submits a job for each rule instance
     * for workflows with many small jobs, should use `group: ` directive to group rules in the same job
-4) Use the `snakemake_remotebatch` wrapper to split the DAG into batches and submit each as a separate job
+4) (experimental): Use the `snakemake_remotebatch` wrapper to split the DAG into batches and submit each as a separate job
 
+
+# Installing cc-slurm profile:
+
+https://github.com/khanlab/cc-slurm
 
 
 # Setting resources for jobs
